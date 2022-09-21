@@ -1,104 +1,42 @@
 <template lang="">
-  <h1>Job detail of job id {{ id }}</h1>
-  <div v-if="isLoading">
-    <p class="my-loader"></p>
-    <h1>Loading</h1>
-  </div>
-  <div v-if="!isLoading">
-    <table>
-      <tr>
-        <td colspan="2"><b>DETAIL</b></td>
-      </tr>
-      <tr>
-        <td>Job name</td>
-        <td>{{ jobData.name }}</td>
-      </tr>
-      <tr>
-        <td>Salary</td>
-        <td>{{ jobData.salary }}</td>
-      </tr>
-      <tr>
-        <td>Quantity</td>
-        <td>{{ jobData.quantity }}</td>
-      </tr>
-      <tr>
-        <td>Description</td>
-        <td>
-          <router-link :to="{ name: 'job-description' }">link</router-link>
-        </td>
-      </tr>
-    </table>
-    <router-view></router-view>
-    <button :disabled="jobData.quantity === 0" @click="onReg">Join now</button>
+  <div>
+    <Wrapper
+      page-title="Job Info"
+      :error-message="!error ? '' : error.toString()"
+      :is-loading="isLoading"
+    >
+      <p>Job ID: {{ job.id }}</p>
+      <p>Job name: {{ job.name }}</p>
+      <p>Salary: {{ job.salary }}</p>
+      <p>Number: {{ job.counter }}</p>
+      <button @click="handleNav">GoBack</button>
+    </Wrapper>
   </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue'
-  import { JOBS } from '../../data'
+  import { useRouter } from 'vue-router'
+  import getJobInfo from '../../composables/getJob'
+  import Wrapper from '../Wrapper.vue'
 
-  export default defineComponent({
+  export default {
+    components: { Wrapper },
     props: {
       id: {
         type: String,
         required: true,
       },
     },
-    data() {
-      return {
-        isLoading: true,
-        jobData: {},
-      }
-    },
-    mounted() {
-      setTimeout(() => {
-        this.isLoading = false
-        for (const job of JOBS) {
-          if (job.id === parseInt(this.id)) {
-            this.jobData = job
-            return
-          }
-        }
-        this.$router.push({ name: 'crash' })
-        // Math.random() * 2000
-      }, Math.random() * 1000)
-    },
-    methods: {
-      onReg() {
-        alert('Done!')
-      },
-    },
-  })
-</script>
-<style lang="scss" scoped>
-  table {
-    margin: auto;
-    font-size: 20px;
-  }
-  table,
-  tr,
-  td {
-    border: 1px solid black;
-  }
-  td {
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
-    border-top: 1px solid black;
-  }
+    setup(props: { id: string }) {
+      const { job, error, isLoading } = getJobInfo(parseInt(props.id))
+      const router = useRouter()
 
-  button {
-    padding: 20px 50px;
-    margin: 20px 20px;
-    background-color: rgb(132 183 227 / 71%);
-    border: none;
-    outline: none;
-    border-radius: 20px;
-    cursor: pointer;
-    text-transform: uppercase;
+      const handleNav = () => {
+        router.go(-1)
+      }
+      return { job, error, isLoading, handleNav }
+    },
   }
-  button:hover {
-    font-weight: bold;
-    outline: auto;
-    background-color: rgb(132 183 227 / 51%);
-  }
-</style>
+</script>
+
+<style lang=""></style>

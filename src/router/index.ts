@@ -3,13 +3,8 @@ import HomePage from '../views/HomePage.vue'
 import AboutPage from '../views/AboutPage.vue'
 import JobPage from '../views/Jobs/JobPage.vue'
 import JobDetail from '../views/Jobs/JobDetail.vue'
-import JobDescription from '../views/Jobs/JobDescription.vue'
 import NotFound from '../views/NotFound.vue'
 import CrashPage from '../views/CrashPage.vue'
-
-import UsersPage from '../views/Users/UsersPage.vue'
-import UserProfile from '../views/Users/UserProfile.vue'
-import UserPost from '../views/Users/UserPost.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -26,40 +21,15 @@ const routes: Array<RouteRecordRaw> = [
     path: '/job',
     name: 'jobs',
     component: JobPage,
-    children: [
-      {
-        path: '/job/:id(\\d+)',
-        name: 'job-detail',
-        component: JobDetail,
-        props: true,
-        children: [
-          {
-            path: 'description',
-            name: 'job-description',
-            component: JobDescription,
-          },
-        ],
-      },
-    ],
   },
 
   {
-    path: '/users/:username',
-    component: UsersPage,
-    children: [
-      // UserHome will be rendered inside User's <router-view>
-      // when /users/:username is matched
-      { path: '', component: UserProfile },
-
-      // UserProfile will be rendered inside User's <router-view>
-      // when /users/:username/profile is matched
-      { path: 'profile', component: UserProfile },
-
-      // UserPosts will be rendered inside User's <router-view>
-      // when /users/:username/posts is matched
-      { path: 'posts', component: UserPost },
-    ],
+    path: '/job/:id(\\d+)',
+    name: 'job-detail',
+    component: JobDetail,
+    props: true,
   },
+
   {
     path: '/crash',
     name: 'crash',
